@@ -33,6 +33,14 @@ directory node['atlas']['download_dir'] do
   action :create
 end
 
+remote_file "#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz" do
+  source node['atlas']['lapack_download_url']
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+end
+
 remote_file "#{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.tar.bz2" do
   source node['atlas']['download_url']
   owner "root"
@@ -62,7 +70,7 @@ bash "install_atlas" do
   cwd "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/build"
   user "root"
   code <<-EOH
-  ../configure -Fa alg -fPIC --with-netlib-lapack=#{node['atlas']['liblapack']}
+  ../configure -Fa alg -fPIC --with-netlib-lapack-tarfile=#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz
   make
   EOH
   creates "../lib/libatlas.a"
