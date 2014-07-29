@@ -85,5 +85,5 @@ bash "install_atlas" do
   make
   make install
   EOH
-  creates "../lib/libatlas.a"
+  creates "#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}"
 end
