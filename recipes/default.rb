@@ -33,7 +33,7 @@ directory node['atlas']['download_dir'] do
   action :create
 end
 
-remote_file "#{node['atlas']['download_dir']}/atlas3.8.3.tar.bz2" do
+remote_file "#{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.tar.bz2" do
   source node['atlas']['download_url']
   owner "root"
   group "root"
