@@ -33,7 +33,7 @@ directory node['atlas']['download_dir'] do
   action :create
 end
 
-remote_file "#{node['atlas']['download_dir']}/atlas3.8.3.tar.gz" do
+remote_file "#{node['atlas']['download_dir']}/atlas3.8.3.tar.bz2" do
   source node['atlas']['download_url']
   owner "root"
   group "root"
@@ -45,7 +45,7 @@ bash "extract_tarball" do
   cwd node['atlas']['download_dir']
   user "root"
   code <<-EOH
-  tar zxf atlas#{node['atlas']['version']}.tar.gz
+  tar jxf atlas#{node['atlas']['version']}.tar.bz2
   mv ATLAS atlas-#{node['atlas']['version']}
   EOH
   creates "atlas-#{node['atlas']['version']}"

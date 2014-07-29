@@ -39,7 +39,7 @@ end
 bash "create_moc_files" do
   user "root"
   code <<-EOH
-  touch #{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.tar.gz
+  touch #{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.tar.bz2
   touch #{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/lib/libatlas.a
   touch #{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/lib/libatlas.a
   touch #{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/include/atlas_lapack.h

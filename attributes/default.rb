@@ -1,5 +1,5 @@
-default['atlas']['version'] = "3.8.3"
-default['atlas']['download_url'] = "http://downloads.sourceforge.net/project/math-atlas/Stable/#{node['atlas']['version']}/atlas#{node['atlas']['version']}.tar.gz"
+default['atlas']['version'] = "3.10.2"
+default['atlas']['download_url'] = "http://downloads.sourceforge.net/project/math-atlas/Stable/#{node['atlas']['version']}/atlas#{node['atlas']['version']}.tar.bz2"
 default['atlas']['download_dir'] = "/root/source"
 default['atlas']['install_dir'] = "/opt"
 default['atlas']['liblapack'] = "/opt/lapack-3.5.0/lib/liblapack.a"
