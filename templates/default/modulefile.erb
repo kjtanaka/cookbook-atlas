@@ -1,0 +1,39 @@
+#%Module1.0###########################################################
+proc moduleVersion { } {
+        if { ! [regexp {[^/]*$} [module-info name] ver] } {
+                puts stderr "Internal modulefile error."
+        }
+        return $ver
+}
+
+set ver        [moduleVersion]
+set path       <%= @atlas_install_dir %>/atlas-$ver
+
+proc ModulesHelp { } {
+   puts stderr "This module adds the ATLAS library to various paths"
+   puts stderr "See http://math-atlas.sourceforge.net/ for further details"
+}
+
+module-whatis   "Sets up ATLAS in your environment"
+
+conflict atlas
+
+prepend-path LD_LIBRARY_PATH $path/lib
+
+setenv ATLAS_DIR "$path"
+setenv ATLAS_INC "$path/include"
+setenv ATLAS_LIB "$path/lib"
+
+if [ module-info mode load ] {
+        puts stderr "atlas version $ver loaded"
+        #puts stderr "$ATLAS_DIR, $ATLAS_INC, $ATLAS_LIB"
+}
+
+if [ module-info mode switch2 ] {
+        puts stderr "atlas version $ver loaded"
+        #puts stderr "$ATLAS_DIR, $ATLAS_INC, $ATLAS_LIB"
+}
+
+if [ module-info mode remove ] {
+        puts stderr "ATLAS version $ver unloaded"
+}
