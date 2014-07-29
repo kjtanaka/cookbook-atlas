@@ -71,12 +71,16 @@ directory "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/bu
   action :create
 end
 
-# Make 
+execute "set_cpufreq_performance" do
+  user "root"
+  command "cpufreq-set -g performance"
+end
+
+# Install ATLAS
 bash "install_atlas" do
   cwd "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/build"
   user "root"
   code <<-EOH
-  cpufreq-set -g performance
   ../configure -Fa alg -fPIC --prefix=#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']} --with-netlib-lapack-tarfile=#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz
   make
   make install
