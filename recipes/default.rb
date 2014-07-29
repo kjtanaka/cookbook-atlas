@@ -18,14 +18,15 @@
 # limitations under the License.
 #
 
+# Install required packages
 include_recipe "build-essential"
-
 node['atlas']['required_packages'].each do |pkg|
     package pkg do
           action :install
             end
 end
 
+# Make sure download directory exists
 directory node['atlas']['download_dir'] do
   owner "root"
   group "root"
@@ -33,6 +34,7 @@ directory node['atlas']['download_dir'] do
   action :create
 end
 
+# Download Lapack
 remote_file "#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz" do
   source node['atlas']['lapack_download_url']
   owner "root"
@@ -41,6 +43,7 @@ remote_file "#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_ver
   action :create_if_missing
 end
 
+# Download ATLAS
 remote_file "#{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.tar.bz2" do
   source node['atlas']['download_url']
   owner "root"
@@ -49,6 +52,7 @@ remote_file "#{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.t
   action :create_if_missing
 end
 
+# Extract ATLAS tarball
 bash "extract_tarball" do
   cwd node['atlas']['download_dir']
   user "root"
@@ -59,6 +63,7 @@ bash "extract_tarball" do
   creates "atlas-#{node['atlas']['version']}"
 end
 
+# Create build directory
 directory "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/build" do
   owner "root"
   group "root"
@@ -66,31 +71,14 @@ directory "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/bu
   action :create
 end
 
+# Make 
 bash "install_atlas" do
   cwd "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/build"
   user "root"
   code <<-EOH
-  ../configure -Fa alg -fPIC --with-netlib-lapack-tarfile=#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz
+  ../configure -Fa alg -fPIC --prefix=#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']} --with-netlib-lapack-tarfile=#{node['atlas']['download_dir']}/lapack-#{node['atlas']['lapack_version']}.tgz
   make
+  make install
   EOH
   creates "../lib/libatlas.a"
-end
-
-directory "#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}" do
-  owner "root"
-  group "root"
-  mode "0755"
-  action :create
-end
-
-execute "copy_lib" do
-  cwd "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}"
-  command "rsync -av lib/ #{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/lib"
-  creates "#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/lib/libatlas.a"
-end
-
-execute "copy_include" do
-  cwd "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}"
-  command "rsync -av include/ #{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/include"
-  creates "#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}/include/atlas_lapack.h"
 end
