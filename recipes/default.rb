@@ -74,6 +74,7 @@ end
 execute "set_cpufreq_performance" do
   user "root"
   command "cpufreq-set -g performance"
+  not_if { ::File.exists?("#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}")}
 end
 
 # Install ATLAS
