@@ -4,6 +4,7 @@ default['atlas']['download_dir'] = "/root/source"
 default['atlas']['install_dir'] = "/opt"
 default['atlas']['lapack_version'] = "3.5.0"
 default['atlas']['lapack_download_url'] = "http://www.netlib.org/lapack/lapack-#{node['atlas']['lapack_version']}.tgz"
+default['atlas']['cpufreq_set'] = true
 
 if platform_family == "rhel" and platform_version.to_f >= 6 and platform_version.to_f < 7 then
   default['atlas']['required_packages'] = %w[gcc-gfortran rsync cpufrequtils]

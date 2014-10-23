@@ -53,7 +53,7 @@ remote_file "#{node['atlas']['download_dir']}/atlas#{node['atlas']['version']}.t
 end
 
 # Extract ATLAS tarball
-bash "extract_tarball" do
+bash "extract_atlas" do
   cwd node['atlas']['download_dir']
   user "root"
   code <<-EOH
@@ -71,10 +71,12 @@ directory "#{node['atlas']['download_dir']}/atlas-#{node['atlas']['version']}/bu
   action :create
 end
 
-execute "set_cpufreq_performance" do
-  user "root"
-  command "cpufreq-set -g performance"
-  not_if { ::File.exists?("#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}")}
+if node['atlas']['cpufreq_set']
+  execute "set_cpufreq_performance" do
+    user "root"
+    command "cpufreq-set -g performance"
+    not_if { ::File.exists?("#{node['atlas']['install_dir']}/atlas-#{node['atlas']['version']}")}
+  end
 end
 
 # Install ATLAS
